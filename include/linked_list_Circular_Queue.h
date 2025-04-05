@@ -38,7 +38,7 @@
     void CircularQueue_##TYPE##_destroy( List_##TYPE* CircularQueue);\
     void CircularQueue_##TYPE##_print(const List_##TYPE* CircularQueue, void (*print_fn)(TYPE));\
     void CircularQueue_##TYPE##_enqueue( List_##TYPE* CircularQueue, TYPE data);\
-    void CircularQueue_##TYPE##_CircularQueue( List_##TYPE* CircularQueue);\
+    void CircularQueue_##TYPE##_dequeue( List_##TYPE* CircularQueue);\
     TYPE CircularQueue_##TYPE##_first(const List_##TYPE* CircularQueue);\
     TYPE CircularQueue_##TYPE##_last(const List_##TYPE* CircularQueue);\
     bool CircularQueue_##TYPE##_is_empty(const List_##TYPE* CircularQueue);\
@@ -241,13 +241,12 @@
     }\
     void CircularQueue_##TYPE##_enqueue( List_##TYPE* CircularQueue, TYPE data ){\
         list_##TYPE##_append(CircularQueue, data);\
-        /*Para encolar en la cola circular sólo hay que empezar con una lista ligada,
+        /*Para encolar en la cola circular sólo hay que empezar con una lista ligada, \
         insertar al final (append) y volverla circular apuntando al siguiente de tail en head*/ \
         if (CircularQueue->tail) CircularQueue->tail->next = CircularQueue->head; \
     }\
-    void CircularQueue_##TYPE##_CircularQueue( List_##TYPE* CircularQueue){\
-        /* Para desencolar sólo hay que remover el nodo en head (posicion 0 de la lista), y conservar
-         la circularidad de nuevo apuntando el siguiente de tail a head*/\
+    void CircularQueue_##TYPE##_dequeue( List_##TYPE* CircularQueue){\
+        /* Para desencolar sólo hay que remover el nodo en head (posicion 0 de la lista), y conservar la circularidad de nuevo apuntando el siguiente de tail a head*/\
         list_##TYPE##_remove_at(CircularQueue, 0);\
         if (CircularQueue->tail) CircularQueue->tail->next = CircularQueue->head; \
     }\
@@ -268,8 +267,7 @@
         return CircularQueue->length==0;\
     }\
     void CircularQueue_##TYPE##_empty( List_##TYPE* CircularQueue){\
-        /* el código de destruir una lista primero la vacía y luego la libera. si sólo quiere vaciarse,
-         se puede copiar el código pero no destruirla una vez es vaciada*/ \
+        /* el código de destruir una lista primero la vacía y luego la libera. si sólo quiere vaciarse, se puede copiar el código pero no destruirla una vez es vaciada*/ \
         if (!CircularQueue) return; \
         Node_##TYPE* current = CircularQueue->head; \
         while (current) { \
