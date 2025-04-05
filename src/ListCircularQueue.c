@@ -18,11 +18,11 @@ int main(){
     CircularQueue_int_enqueue(Lista , 3);
     CircularQueue_int_enqueue(Lista , 4);
     printf("Primero %d\n", CircularQueue_int_first(Lista));
-    printf("Ultimo %d\n", CircularQueue_int_first(Lista));
+    printf("Ultimo %d\n", CircularQueue_int_last(Lista));
     CircularQueue_int_print(Lista, print_int);
     CircularQueue_int_dequeue(Lista);
     printf("Primero %d\n", CircularQueue_int_first(Lista));
-    printf("Ultimo %d\n", CircularQueue_int_first(Lista));
+    printf("Ultimo %d\n", CircularQueue_int_last(Lista));
     CircularQueue_int_print(Lista, print_int);
     CircularQueue_int_dequeue(Lista);
     CircularQueue_int_dequeue(Lista);
