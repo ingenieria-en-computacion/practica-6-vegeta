@@ -14,25 +14,27 @@
         int head; \
         int tail; \
         size_t length; \
-    } Circular_Queue_##TYPE; \
+    } D_E_Queue_##TYPE; \
     \
-    /*Operaciones de las Colas circulares (CircularQueue) implementadas como lista ligada*/\
-    Circular_Queue_##TYPE* CircularQueue_##TYPE##_create(void); \
-    void CircularQueue_##TYPE##_destroy( Circular_Queue_##TYPE* CircularQueue);\
-    void CircularQueue_##TYPE##_print(const Circular_Queue_##TYPE* CircularQueue, void (*print_fn)(TYPE));\
-    void CircularQueue_##TYPE##_enqueue( Circular_Queue_##TYPE* CircularQueue, TYPE data);\
-    void CircularQueue_##TYPE##_dequeue( Circular_Queue_##TYPE* CircularQueue);\
-    TYPE CircularQueue_##TYPE##_first(const Circular_Queue_##TYPE* CircularQueue);\
-    TYPE CircularQueue_##TYPE##_last(const Circular_Queue_##TYPE* CircularQueue);\
-    bool CircularQueue_##TYPE##_is_empty(const Circular_Queue_##TYPE* CircularQueue);\
-    void CircularQueue_##TYPE##_empty(const Circular_Queue_##TYPE* CircularQueue);\
+    /*Operaciones de las Colas circulares (DEQueue) implementadas como lista ligada*/\
+    D_E_Queue_##TYPE* DEQueue_##TYPE##_create(void); \
+    void DEQueue_##TYPE##_destroy( D_E_Queue_##TYPE* DEQueue);\
+    void DEQueue_##TYPE##_print(const D_E_Queue_##TYPE* DEQueue, void (*print_fn)(TYPE));\
+    void DEQueue_##TYPE##_enqueue_head( D_E_Queue_##TYPE* DEQueue, TYPE data);\
+    void DEQueue_##TYPE##_dequeue_head( D_E_Queue_##TYPE* DEQueue);\
+    void DEQueue_##TYPE##_enqueue_tail( D_E_Queue_##TYPE* DEQueue, TYPE data);\
+    void DEQueue_##TYPE##_dequeue_tail( D_E_Queue_##TYPE* DEQueue);\
+    TYPE DEQueue_##TYPE##_first(const D_E_Queue_##TYPE* DEQueue);\
+    TYPE DEQueue_##TYPE##_last(const D_E_Queue_##TYPE* DEQueue);\
+    bool DEQueue_##TYPE##_is_empty(const D_E_Queue_##TYPE* DEQueue);\
+    void DEQueue_##TYPE##_empty(const D_E_Queue_##TYPE* DEQueue);\
 // ----------------------------
 // Macro para implementación
 // ----------------------------
 #define IMPLEMENT_CIRCULAR_QUEUE(TYPE) \
-    Circular_Queue_##TYPE* CircularQueue_##TYPE##_create(void){\
+    D_E_Queue_##TYPE* DEQueue_##TYPE##_create(void){\
         /*Se crea la cola circular con malloc, se inician head y tail en -1 porque aún no hay datos, y se inicia la longitud de la cola en 0*/\
-        Circular_Queue_##TYPE* new_Queue = (Circular_Queue_##TYPE*)malloc(sizeof(Circular_Queue_##TYPE));\
+        D_E_Queue_##TYPE* new_Queue = (D_E_Queue_##TYPE*)malloc(sizeof(D_E_Queue_##TYPE));\
         if(!new_Queue) return NULL;\
         new_Queue->head = -1;\
         new_Queue->tail = -1;\
@@ -40,82 +42,118 @@
         new_Queue->posicion = (TYPE*)malloc(sizeof(TYPE)*10);\
         return new_Queue;\
     }\
-    void CircularQueue_##TYPE##_destroy( Circular_Queue_##TYPE* CircularQueue){\
+    void DEQueue_##TYPE##_destroy( D_E_Queue_##TYPE* DEQueue){\
         /*si se pasa una cola no nula, se libera  la cola, borrándola*/ \
-        if(!CircularQueue) return;\
-        free(CircularQueue);\
+        if(!DEQueue) return;\
+        free(DEQueue);\
     }\
-    void CircularQueue_##TYPE##_print(const CircularQueue_##TYPE* CircularQueue, void (*print_fn)(TYPE)){\
+    void DEQueue_##TYPE##_print(const DEQueue_##TYPE* DEQueue, void (*print_fn)(TYPE)){\
         /*si la cola y la función para imprimir existen, se recorre el arreglo de la cola con un for*/ \
-        if (!CircularQueue || !print_fn) return; \
+        if (!DEQueue || !print_fn) return; \
         \
         printf("[ "); \
-        for(int i = 0; i<CircularQueue->length;i++){\
-            print_fn(CircularQueue->posicion[i]);\
-            if (i<CircularQueue->length-1)printf(", ");\
+        for(int i = 0; i<DEQueue->length;i++){\
+            print_fn(DEQueue->posicion[i]);\
+            if (i<DEQueue->length-1)printf(", ");\
         }\
         printf("]\n"); \
     }\
-    void CircularQueue_##TYPE##_enqueue( Circular_Queue_##TYPE* CircularQueue, TYPE data){\
+    void DEQueue_##TYPE##_enqueue_head( D_E_Queue_##TYPE* DEQueue, TYPE data){\
         /*si la cola está vacía, se inician head y tail en 0, se pone el dato deseado en la posición 0 del arreglo, y length es 1*/\
-        if(CircularQueue_##TYPE##_is_empty(CircularQueue)){\
-            CircularQueue->head =0;\
-            CircularQueue->tail = 0;\
-            CircularQueue->posicion[0]= data;\
-            CircularQueue->length=1;\
+        if(DEQueue_##TYPE##_is_empty(DEQueue)){\
+            DEQueue->head =0;\
+            DEQueue->tail = 0;\
+            DEQueue->posicion[0]= data;\
+            DEQueue->length=1;\
             return;\
         }\
         /*si la longitud de la cola es igual al tamaño del arreglo entre el tamaño del dato (los datos que se están guardando actualmente en la cola ) se agranda el arreglo*/ \
-        if(CircularQueue->length == sizeof(CircularQueue->posicion)/sizeof(TYPE)) CircularQueue->posicion = realloc(CircularQueue->posición, CircularQueue->length+1);\
+        if(DEQueue->length == sizeof(DEQueue->posicion)/sizeof(TYPE)) DEQueue->posicion = realloc(DEQueue->posición, DEQueue->length+1);\
+        /*se recorren los elementos para hacer espacio antes de head para poner elelemento deseado*/\
+        for(int i = DEQueue->length ; i>0;i--){\
+            DEQueue->posicion[i]=DEQueue->posicion[i-1];\
+        }\
         /*se aumentan tail y length para reflejar que se añadirá un elemento, se pone el dato deseado en el espacio correcto*/\
-        CircularQueue->tail ++;\
-        CircularQueue->length ++;\
-        CircularQueue->posicion[CircularQueue->tail] = data;\
+        DEQueue->tail ++;\
+        DEQueue->length ++;\
+        DEQueue->posicion[0] = data;\
     }\
-    void CircularQueue_##TYPE##_dequeue( Circular_Queue_##TYPE* CircularQueue){\
+    void DEQueue_##TYPE##_enqueue_tail( D_E_Queue_##TYPE* DEQueue, TYPE data){\
+        /*si la cola está vacía, se inician head y tail en 0, se pone el dato deseado en la posición 0 del arreglo, y length es 1*/\
+        if(DEQueue_##TYPE##_is_empty(DEQueue)){\
+            DEQueue->head =0;\
+            DEQueue->tail = 0;\
+            DEQueue->posicion[0]= data;\
+            DEQueue->length=1;\
+            return;\
+        }\
+        /*si la longitud de la cola es igual al tamaño del arreglo entre el tamaño del dato (los datos que se están guardando actualmente en la cola ) se agranda el arreglo*/ \
+        if(DEQueue->length == sizeof(DEQueue->posicion)/sizeof(TYPE)) DEQueue->posicion = realloc(DEQueue->posición, DEQueue->length+1);\
+        /*se aumentan tail y length para reflejar que se añadirá un elemento, se pone el dato deseado en el espacio correcto*/\
+        DEQueue->tail ++;\
+        DEQueue->length ++;\
+        DEQueue->posicion[DEQueue->tail] = data;\
+    }\
+    void DEQueue_##TYPE##_dequeue_head( D_E_Queue_##TYPE* DEQueue){\
         /*Si la cola está vacía, no se puede desencolar , no se hace nada más. si sólo había un elemento, se restablecen los valores default, y si no es ninguna, se mueven los elementos para desencolar*/\
-        if(CircularQueue_##TYPE##_is_empty(CircularQueue)){\
+        if(DEQueue_##TYPE##_is_empty(DEQueue)){\
             printf("la cola está vacía");\
             return;\
         }\
-        if(CircularQueue->length==1){\
-            CircularQueue->head =-1;\
-            CircularQueue->tail = -1;\
-            CircularQueue->length=0;\
+        if(DEQueue->length==1){\
+            DEQueue->head =-1;\
+            DEQueue->tail = -1;\
+            DEQueue->length=0;\
             return;\
         }\
         /*se recorren los elemenots y se cambian length y tail, quitando el elemento en 0 y preservando la estructura de la cola correctamente*/\
-        for(int i = 0; i<CircularQueue->length-1;i++){\
-            CircularQueue->posicion[i]=CircularQueue->posicion[i+1];\
+        for(int i = 0; i<DEQueue->length-1;i++){\
+            DEQueue->posicion[i]=DEQueue->posicion[i+1];\
         }\
-        CircularQueue->length--;\
-        CircularQueue->tail--;\
+        DEQueue->length--;\
+        DEQueue->tail--;\
     }\
-    TYPE CircularQueue_##TYPE##_first(const Circular_Queue_##TYPE* CircularQueue){\
+    void DEQueue_##TYPE##_dequeue_tail( D_E_Queue_##TYPE* DEQueue){\
+        /*Si la cola está vacía, no se puede desencolar , no se hace nada más. si sólo había un elemento, se restablecen los valores default, y si no es ninguna, se mueven los elementos para desencolar*/\
+        if(DEQueue_##TYPE##_is_empty(DEQueue)){\
+            printf("la cola está vacía");\
+            return;\
+        }\
+        if(DEQueue->length==1){\
+            DEQueue->head =-1;\
+            DEQueue->tail = -1;\
+            DEQueue->length=0;\
+            return;\
+        }\
+        /*se cambian length y tail, quitando el elemento en tail y preservando la estructura de la cola correctamente*/\
+        DEQueue->length--;\
+        DEQueue->tail--;\
+    }\
+    TYPE DEQueue_##TYPE##_first(const D_E_Queue_##TYPE* DEQueue){\
         /*si la cola está vacía se imprime un error y se manda el '0' como error con el tipo apropiado. si no está vacía, se retorna el primer dato (posición 0)*/\
-        if(!CircularQueue_##TYPE##_is_empty(CircularQueue)){\
+        if(!DEQueue_##TYPE##_is_empty(DEQueue)){\
             printf("cola vacía");\
             return (TYPE)0;\
         }\
-        return CircularQueue->posicion[0];\
+        return DEQueue->posicion[0];\
     }\
-    TYPE CircularQueue_##TYPE##_last(const Circular_Queue_##TYPE* CircularQueue){\
+    TYPE DEQueue_##TYPE##_last(const D_E_Queue_##TYPE* DEQueue){\
         /*si la cola está vacía se imprime un error y se manda el '0' como error con el tipo apropiado. si no está vacía, se retorna el último dato (posición tail)*/\
-        if(!CircularQueue_##TYPE##_is_empty(CircularQueue)){\
+        if(!DEQueue_##TYPE##_is_empty(DEQueue)){\
             printf("cola vacía");\
             return (TYPE)0;\
         }\
-        return CircularQueue->posicion[CircularQueue->tail];\
+        return DEQueue->posicion[DEQueue->tail];\
     }\
-    bool CircularQueue_##TYPE##_is_empty(const Circular_Queue_##TYPE* CircularQueue){\
+    bool DEQueue_##TYPE##_is_empty(const D_E_Queue_##TYPE* DEQueue){\
         /*si la longitud es 0, retorna verdad, si no, retorna falso*/\
-        return CircularQueue->length==0;\
+        return DEQueue->length==0;\
     }\
-    void CircularQueue_##TYPE##_empty(const Circular_Queue_##TYPE* CircularQueue){\
+    void DEQueue_##TYPE##_empty(const D_E_Queue_##TYPE* DEQueue){\
         /*se restablecen los valores default a como si estuviera vacía.*/\
-        CircularQueue->head =-1;\
-            CircularQueue->tail = -1;\
-            CircularQueue->length=0;\
+        DEQueue->head =-1;\
+            DEQueue->tail = -1;\
+            DEQueue->length=0;\
     }\
 DECLARE_CIRCULAR_QUEUE(int)
 DECLARE_CIRCULAR_QUEUE(char)

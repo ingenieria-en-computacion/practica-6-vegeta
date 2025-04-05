@@ -243,13 +243,11 @@
     }\
     void DEQueue_##TYPE##_enqueue_head( List_##TYPE* DEQueue, TYPE data ){\
         list_##TYPE##_insert(DEQueue, data, 0);\
-        /*Para encolar en la cola doble sólo hay que empezar con una lista ligada,
-        e insertar al inicio (pos 0)*/ \
+        /*Para encolar en la cola doble sólo hay que empezar con una lista ligada,e insertar al inicio (pos 0)*/ \
     }\
     void DEQueue_##TYPE##_enqueue_tail( List_##TYPE* DEQueue, TYPE data ){\
         list_##TYPE##_append(DEQueue, data);\
-        /*Para encolar en la cola doble sólo hay que empezar con una lista ligada, e
-        insertar al final (append) */ \
+        /*Para encolar en la cola doble sólo hay que empezar con una lista ligada, e insertar al final (append) */ \
    }\
     void DEQueue_##TYPE##_dequeue_head( List_##TYPE* DEQueue){\
         /* Para desencolar sólo hay que remover el nodo en head (posicion 0 de la lista)*/\
@@ -276,8 +274,7 @@
         return DEQueue->length==0;\
     }\
     void DEQueue_##TYPE##_empty( List_##TYPE* DEQueue){\
-        /* el código de destruir una lista primero la vacía y luego la libera. si sólo quiere vaciarse,
-         se puede copiar el código pero no destruirla una vez es vaciada*/ \
+        /* el código de destruir una lista primero la vacía y luego la libera. si sólo quiere vaciarse, se puede copiar el código pero no destruirla una vez es vaciada*/ \
         if (!DEQueue) return; \
         Node_##TYPE* current = DEQueue->head; \
         while (current) { \
