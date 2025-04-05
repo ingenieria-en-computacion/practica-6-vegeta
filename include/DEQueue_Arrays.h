@@ -45,6 +45,7 @@
     void DEQueue_##TYPE##_destroy( D_E_Queue_##TYPE* DEQueue){\
         /*si se pasa una cola no nula, se libera  la cola, borrándola*/ \
         if(!DEQueue) return;\
+        free(DEQueue->posicion);\
         free(DEQueue);\
     }\
     void DEQueue_##TYPE##_print(const DEQueue_##TYPE* DEQueue, void (*print_fn)(TYPE)){\

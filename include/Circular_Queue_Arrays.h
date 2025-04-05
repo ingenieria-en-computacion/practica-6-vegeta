@@ -43,6 +43,7 @@
     void CircularQueue_##TYPE##_destroy( Circular_Queue_##TYPE* CircularQueue){\
         /*si se pasa una cola no nula, se libera  la cola, borrándola*/ \
         if(!CircularQueue) return;\
+        free(CircularQueue->posicion);\
         free(CircularQueue);\
     }\
     void CircularQueue_##TYPE##_print(const CircularQueue_##TYPE* CircularQueue, void (*print_fn)(TYPE)){\
