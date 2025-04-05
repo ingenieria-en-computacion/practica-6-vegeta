@@ -176,12 +176,11 @@
         \
         printf("["); \
         Node_##TYPE* current = list->head; \
-        while (current) { \
+        for(int i = 0; i<list->length;i++, current = current->next){\
             print_fn(current->data); \
             if (current->next) printf(", "); \
-            current = current->next; \
-        } \
-        printf("]\n"); \
+        }\
+        printf("]\n");\
     } \
     \
     bool list_##TYPE##_contains(const List_##TYPE* list, TYPE data) { \
@@ -266,7 +265,7 @@
         /* preguntar por la longitud de la lista, si es 0, la lista está vacía*/\
         return CircularQueue->length==0;\
     }\
-    void CircularQueue_##TYPE##_empty( List_##TYPE* CircularQueue){\
+    void CircularQueue_##TYPE##_empty(const List_##TYPE* CircularQueue){\
         /* el código de destruir una lista primero la vacía y luego la libera. si sólo quiere vaciarse, se puede copiar el código pero no destruirla una vez es vaciada*/ \
         if (!CircularQueue) return; \
         Node_##TYPE* current = CircularQueue->head; \
@@ -275,8 +274,8 @@
             current = current->next; \
             free(temp); \
         } \
+        free(current);\
     }\
-
 // ----------------------------
 // Declaración para tipos concretos
 // ----------------------------

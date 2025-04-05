@@ -44,7 +44,7 @@
     TYPE DEQueue_##TYPE##_first(const List_##TYPE* DEQueue);\
     TYPE DEQueue_##TYPE##_last(const List_##TYPE* DEQueue);\
     bool DEQueue_##TYPE##_is_empty(const List_##TYPE* DEQueue);\
-    void DEQueue_##TYPE##_empty(const List_##TYPE* DEQueue);\
+    void DEQueue_##TYPE##_empty( List_##TYPE* DEQueue);\
 // ----------------------------
 // Macro para implementación
 // ----------------------------
@@ -282,8 +282,8 @@
             current = current->next; \
             free(temp); \
         } \
+        free(current);\
     }\
-
 // ----------------------------
 // Declaración para tipos concretos
 // ----------------------------
